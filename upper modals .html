@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upper-Intermediate Modals Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f9;
+      color: #333;
+      line-height: 1.6;
+      padding: 20px;
+      max-width: 850px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    .quiz-container {
+      background: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .question-card {
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .question-title {
+      font-size: 1.05em;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .option-btn {
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 0.95em;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+    .option-btn:hover {
+      background-color: #eef2f5;
+    }
+    .option-btn.selected {
+      border-color: #3498db;
+      background-color: #ebf5fb;
+    }
+    .option-btn.correct {
+      background-color: #d4edda !important;
+      border-color: #28a745 !important;
+      color: #155724;
+    }
+    .option-btn.incorrect {
+      background-color: #f8d7da !important;
+      border-color: #dc3545 !important;
+      color: #721c24;
+    }
+    .actions {
+      text-align: center;
+      margin-top: 25px;
+    }
+    .submit-btn {
+      background-color: #27ae60;
+      color: #fff;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1.1em;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .submit-btn:hover {
+      background-color: #219150;
+    }
+    #result-panel {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #e8f8f5;
+      border: 1px solid #a3e4d7;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #117a65;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Upper-Intermediate Modals Test</h1>
+  
+  <div class="quiz-container">
+    <div id="quiz"></div>
+    <div class="actions">
+      <button class="submit-btn" onclick="checkAnswers()">Завершити тест та перевірити</button>
+    </div>
+    <div id="result-panel"></div>
+  </div>
+
+  <script>
+    const quizData = [
+      { id: 1, q: "His illness got worse and worse. In the end he _____ go into hospital for an operation.", opts: { A: "will have to", B: "must", C: "had to", D: "ought to have" }, ans: "C" },
+      { id: 2, q: "You _____ any more aspirins; you’ve had four already.", opts: { A: "mustn’t take", B: "needn’t have taken", C: "shouldn’t have taken", D: "had better not take" }, ans: "D" },
+      { id: 3, q: "I’ve searched everywhere for Bob but I _____ to find him.", opts: { A: "wasn’t able", B: "am not able", C: "haven’t been able", D: "couldn’t" }, ans: "C" },
+      { id: 4, q: "A: Mrs. Taylor was found dead with a wire around her neck.\nB: She _____ strangled.", opts: { A: "had to be", B: "ought to have been", C: "should have", D: "must have been" }, ans: "D" },
+      { id: 5, q: "You _____ spanked her. She didn’t deserve it.", opts: { A: "shouldn’t have", B: "needn’t have", C: "mustn’t have", D: "couldn’t have" }, ans: "A" },
+      { id: 6, q: "A: I wonder who took my alarm clock.\nB: It _____ Julia. She _____ supposed to get up early.", opts: { A: "might be / is", B: "could be / is", C: "had to be / was", D: "must have been / was" }, ans: "D" },
+      { id: 7, q: "In a hundred years’ time we _____ out of water to drink.", opts: { A: "must have run", B: "might have been/run", C: "should have run", D: "may have run" }, ans: "D" },
+      { id: 8, q: "If you’d explained your problem to me, I _____ to help you.", opts: { A: "was able", B: "will have been able", C: "would have been able", D: "could have" }, ans: "C" },
+      { id: 9, q: "Joe ran all the way. It wasn’t necessary. Joe _____ run all the way.", opts: { A: "needn’t have", B: "need have", C: "didn’t need to", D: "doesn’t need to" }, ans: "A" },
+      { id: 10, q: "Tom was serious when he said he wanted to be an actor when he grew up. We _____ at him. We hurt his feelings.", opts: { A: "shouldn’t have laughed", B: "needn’t have laughed", C: "mustn’t have laughed", D: "shouldn’t have been laughed" }, ans: "A" },
+      { id: 11, q: "He _____ hungry. He isn’t eating his food.", opts: { A: "should be", B: "needn’t have been", C: "might not have been", D: "must not be" }, ans: "D" },
+      { id: 12, q: "All the lights in Terry’s room are turned off. He_____ sleeping.", opts: { A: "must have been", B: "had to be", C: "must be", D: "must not be" }, ans: "C" },
+      { id: 13, q: "Let’s go to the seminar. It _____ interesting.", opts: { A: "used to be", B: "is supposed to be", C: "must have been", D: "needs to be" }, ans: "B" },
+      { id: 14, q: "Children _____ taught to respect their elders.", opts: { A: "should be", B: "had better", C: "has to be", D: "must have" }, ans: "A" },
+      { id: 15, q: "This application _____ last week.", opts: { A: "should be sent", B: "must have been", C: "ought to have been sent", D: "should have sent" }, ans: "C" },
+      { id: 16, q: "We can’t wait any longer! Something _____ immediately.", opts: { A: "should have been done", B: "had to be done", C: "ought to do", D: "must be done" }, ans: "D" },
+      { id: 17, q: "A: I overslept this morning.\nB: You _____ your alarm clock.", opts: { A: "had better set", B: "had to set", C: "should have set", D: "ought to have been" }, ans: "C" },
+      { id: 18, q: "Rice _____ have water in order to grow.", opts: { A: "must", B: "should", C: "had better", D: "ought to" }, ans: "A" },
+      { id: 19, q: "I _____ to go now. I have a class in ten minutes.", opts: { A: "had better", B: "have got", C: "must", D: "should" }, ans: "B" },
+      { id: 20, q: "“Doctors are supposed to help sick people” means: _____.", opts: { A: "They help sick people.", B: "They should help sick people.", C: "They must be helping sick people.", D: "They might have helped sick people." }, ans: "B" },
+      { id: 21, q: "I _____ to the doctor. I’m feeling much better.", opts: { A: "don’t have to go", B: "needn’t have gone", C: "should have gone", D: "mustn’t go" }, ans: "A" },
+      { id: 22, q: "This is an opportunity that comes once in a lifetime. We _____ let it pass.", opts: { A: "don’t have to", B: "shouldn’t have", C: "needn’t have", D: "mustn’t" }, ans: "D" },
+      { id: 23, q: "I _____ go to the cinema than study English.", opts: { A: "would rather", B: "had better", C: "need to", D: "should" }, ans: "A" },
+      { id: 24, q: "When I was a child my father _____ read me a story every night before bed.", opts: { A: "was going to", B: "was used to", C: "would", D: "got used to" }, ans: "C" },
+      { id: 25, q: "A: Did you enjoy the concert?\nB: It was OK, but I ___ to the theatre.", opts: { A: "needn’t have gone", B: "must have gone", C: "had better go", D: "would rather have gone" }, ans: "D" },
+      { id: 26, q: "A: How much do you weigh?\nB: _____.", opts: { A: "I needn’t have told you", B: "I’d rather not tell you", C: "I couldn’t have told you", D: "I’d better not be told" }, ans: "B" },
+      { id: 27, q: "When I was a child, I _____ a flashlight to bed with me so that I _____ read comic books without my parents’ knowing them.", opts: { A: "used to take / could", B: "was used to taking / could", C: "would take / can", D: "would have taken / was able to" }, ans: "A" },
+      { id: 28, q: "After looking at his notes again, he _____ to complete the exercise.", opts: { A: "could", B: "was able", C: "can", D: "has been able" }, ans: "B" },
+      { id: 29, q: "If we don’t book seats soon, we _____ to get into the concert.", opts: { A: "are able", B: "won’t be able", C: "will be able", D: "can’t" }, ans: "B" },
+      { id: 30, q: "If we went to live in the tropics. I _____ buy some thin clothes.", opts: { A: "will have to", B: "have to", C: "would have to", D: "have had to" }, ans: "C" },
+      { id: 31, q: "If there is fuel shortage, solar energy _____.", opts: { A: "has to develop", B: "will have to be developed", C: "will have to develop", D: "had to be developed" }, ans: "B" },
+      { id: 32, q: "When she got thinner she _____ take her dress in.", opts: { A: "will have to", B: "should", C: "has to", D: "had to" }, ans: "D" },
+      { id: 33, q: "Mary _____ any chocolates but she did.", opts: { A: "shouldn’t eat", B: "ought not to have eaten", C: "ought not to eat", D: "must not have eaten" }, ans: "B" },
+      { id: 34, q: "Your umbrella is wet. It _____ raining.", opts: { A: "must be", B: "was", C: "can’t be", D: "might" }, ans: "A" },
+      { id: 35, q: "_____ the pains come again, don’t hesitate to phone me.", opts: { A: "Would", B: "Should", C: "Will", D: "Had" }, ans: "B" },
+      { id: 36, q: "_____ it been raining, I’d have needed my umbrella.", opts: { A: "Should", B: "Would", C: "Might", D: "Had" }, ans: "D" },
+      { id: 37, q: "A: I took Janet to the cinema last night.\nB: You _____ me too. I was at home.", opts: { A: "might take", B: "may have been taken", C: "might have taken", D: "must have taken" }, ans: "C" },
+      { id: 38, q: "I don’t think she _____. Call her again.", opts: { A: "can have heard", B: "might have heard", C: "must hear", D: "can be heard" }, ans: "A" },
+      { id: 39, q: "Lucy is very late. She _____ her train.", opts: { A: "may miss", B: "may have missed", C: "had to miss", D: "should have missed" }, ans: "B" },
+      { id: 40, q: "I walked to school this morning, but I _____ a bus.", opts: { A: "didn’t need to take", B: "had better take", C: "might take", D: "could have taken" }, ans: "D" },
+      { id: 41, q: "The flower is dead. Maybe I _____ it more water.", opts: { A: "might give", B: "needed to give", C: "should have given", D: "ought to have been given" }, ans: "C" },
+      { id: 42, q: "These flowers _____ twice a week, but I always forget to water them.", opts: { A: "ought to water", B: "ought to have been watered", C: "should be watered", D: "needn’t have been watered" }, ans: "C" },
+      { id: 43, q: "Why don’t you buy a lottery ticket. You _____ a large prize.", opts: { A: "might win", B: "might have won", C: "could have won", D: "must have won" }, ans: "A" },
+      { id: 44, q: "Why did you take such a risk? You _____ died!", opts: { A: "could", B: "must be", C: "might have", D: "may be" }, ans: "C" },
+      { id: 45, q: "We _____ our towels because we knew the hotel would provide some.", opts: { A: "didn’t need to pack", B: "needn’t pack", C: "don’t have to pack", D: "needn’t have been packed" }, ans: "A" },
+      { id: 46, q: "It was very cold in the morning. You _____ your sweater.", opts: { A: "could wear", B: "need to wear", C: "should have worn", D: "might wear" }, ans: "C" },
+      { id: 47, q: "“I was supposed to call her at seven.” means: _____.", opts: { A: "I called her at seven", B: "I was called by her at seven", C: "I could call her at seven.", D: "I should have called her at seven" }, ans: "D" },
+      { id: 48, q: "You _____ for me; I could have found the way all right.", opts: { A: "needn’t have waited", B: "could have waited", C: "don’t have to wait", D: "didn’t need to wait" }, ans: "A" },
+      { id: 49, q: "Janet _____ some problem. She keeps crying.", opts: { A: "must have had", B: "must have", C: "needs to have", D: "may have had" }, ans: "B" },
+      { id: 50, q: "The lights have gone out. _____.", opts: { A: "A fuse might blow", B: "A fuse could blow", C: "A fuse must have blown", D: "A fuse will have blown" }, ans: "C" },
+      { id: 51, q: "I _____ to the butcher’s on the way home, but I forgot.", opts: { A: "need to go", B: "ought to have gone", C: "must have gone", D: "should go" }, ans: "B" },
+      { id: 52, q: "She _____ about the time. Her friends were also late.", opts: { A: "needn’t worry", B: "won’t need to worry", C: "doesn’t need to worry", D: "needn’t have worried" }, ans: "D" },
+      { id: 53, q: "The plane _____ already-it’s not due to go until 9.55.", opts: { A: "must not leave", B: "needn’t have left", C: "can’t leave", D: "can’t have left" }, ans: "D" },
+      { id: 54, q: "A: Is it Sunday? All the shops are closed.\nB: Well, if all the shops are closed, it _____ Sunday.", opts: { A: "can’t be", B: "might have been", C: "must be", D: "must have been" }, ans: "C" },
+      { id: 55, q: "A: You bought the tickets, didn’t you?\nB: No. I _____, but I didn’t have enough money.", opts: { A: "couldn’t", B: "ought to have been", C: "was supposed to", D: "must have" }, ans: "C" },
+      { id: 56, q: "The boy _____ walk again soon after he had had an operation.", opts: { A: "can", B: "is able to", C: "might", D: "was able to" }, ans: "D" },
+      { id: 57, q: "He was crying just a moment ago. He _____ singing already.", opts: { A: "is not able to", B: "must be", C: "must not", D: "can’t be" }, ans: "D" },
+      { id: 58, q: "George is reading a Spanish newspaper. He _____ Spanish.", opts: { A: "is to know", B: "must know", C: "had to know", D: "need to know" }, ans: "B" },
+      { id: 59, q: "No wonder you always look pale. You _____ get more fresh air.", opts: { A: "will need", B: "ought to", C: "had to", D: "must have" }, ans: "B" },
+      { id: 60, q: "To keep fit and stay healthy, you _____ enough of the right kinds of exercise.", opts: { A: "have to take", B: "used to take", C: "might have taken", D: "ought to have taken" }, ans: "A" },
+      { id: 61, q: "Transport systems _____ likely to change in the future. One probable difference is that there _____ more electric vehicles.", opts: { A: "is / will be", B: "will / are", C: "are / will be", D: "will / would be" }, ans: "C" },
+      { id: 62, q: "If you want antibiotics, you _____ to ask the doctor for a prescription.", opts: { A: "must", B: "had better", C: "will have", D: "should" }, ans: "C" },
+      { id: 63, q: "“You weren’t supposed to do that.” means: _____.", opts: { A: "You should do that, but you don’t.", B: "You should have done it, but you didn’t.", C: "You shouldn’t have done it.", D: "You shouldn’t do that, but you do." }, ans: "C" },
+      { id: 64, q: "The wound has healed now. You _____ that bandage any longer.", opts: { A: "needn’t have worn", B: "didn’t need to wear", C: "don’t have to wear", D: "didn’t have to wear" }, ans: "C" },
+      { id: 65, q: "You _____ this to Kate, or she’ll get upset.", opts: { A: "needn’t tell", B: "shouldn’t have told", C: "mustn’t have told", D: "mustn’t tell" }, ans: "D" },
+      { id: 66, q: "A: His office is empty. He must have gone home.\nB: But his briefcase is here. He _____ home.", opts: { A: "might not go", B: "can’t have gone", C: "ought not to go", D: "could have gone" }, ans: "B" },
+      { id: 67, q: "He _____ with us if he doesn’t want to.", opts: { A: "needs to come", B: "needn’t have come", C: "didn’t need to come", D: "needn’t come" }, ans: "D" },
+      { id: 68, q: "The package _____ to the wrong address.", opts: { A: "must have been sent", B: "ought to be sent", C: "could have sent", D: "might have sent" }, ans: "A" },
+      { id: 69, q: "Since you have been working for hours, you _____ tired.", opts: { A: "could be", B: "can’t be", C: "must have been", D: "might have been" }, ans: "A" },
+      { id: 70, q: "We _____ or we’ll be late,", opts: { A: "had better hurry", B: "didn’t need to hurry", C: "had to hurry", D: "needn’t have hurried" }, ans: "A" },
+      { id: 71, q: "The car broke down, and we _____ have it towed to a service station.", opts: { A: "have to", B: "had to", C: "should", D: "ought to" }, ans: "B" },
+      { id: 72, q: "No one likes _____ work at the weekend.", opts: { A: "has to", B: "had to", C: "will have to", D: "having to" }, ans: "D" },
+      { id: 73, q: "It is very difficult choice to _____ make.", opts: { A: "have to", B: "having to", C: "had to", D: "must" }, ans: "A" },
+      { id: 74, q: "You _____ to see a doctor. You’re perfectly healthy.", opts: { A: "mustn’t", B: "don’t need", C: "may not", D: "shouldn’t" }, ans: "B" },
+      { id: 75, q: "Alcohol _____ be bad for his health, but it is for me.", opts: { A: "must not", B: "didn’t need to", C: "doesn’t have to", D: "may not" }, ans: "C" },
+      { id: 76, q: "Children under twelve _____ travel free of charge.", opts: { A: "can", B: "is able to", C: "can not be", D: "must be" }, ans: "A" },
+      { id: 77, q: "Father is mending the car. After that we _____ to go for a drive.", opts: { A: "can", B: "might", C: "may", D: "will be able" }, ans: "D" },
+      { id: 78, q: "It is very important to me, and I really_____ be late.", opts: { A: "might not", B: "ought not", C: "don’t have to", D: "mustn’t" }, ans: "D" },
+      { id: 79, q: "We _____ write an essay on the book after we’d read it.", opts: { A: "had to", B: "have to", C: "will have to", D: "must" }, ans: "A" },
+      { id: 80, q: "The sky _____ seen because of the pollution.", opts: { A: "can not", B: "can’t be", C: "might be", D: "must be" }, ans: "B" },
+      { id: 81, q: "I_____ sorry if she had left.", opts: { A: "will be", B: "would’ve been", C: "would be", D: "had been" }, ans: "B" },
+      { id: 82, q: "Robert is a millionaire’s son. He _____ never_____ worry about anything in life.", opts: { A: "is / has to", B: "had / had to", C: "has / had to", D: "doesn’t / have to" }, ans: "D" },
+      { id: 83, q: "You’d better not try to bribe him. He _____ you to the police.", opts: { A: "could report", B: "might have reported", C: "needs to report", D: "could have reported" }, ans: "A" },
+      { id: 84, q: "I wish you’d told me they were on the phone. I _____ all the way to their house.", opts: { A: "didn’t have to go", B: "didn’t need to go", C: "needn’t go", D: "needn’t have gone" }, ans: "D" },
+      { id: 85, q: "If only you’d mentioned that your friend played tennis. We _____ a game of doubles.", opts: { A: "can have", B: "could have had", C: "might have", D: "could have" }, ans: "B" },
+      { id: 86, q: "If my car _____ stuck in a traffic jam, I’d be very angry, but I _____ my horn.", opts: { A: "is / won’t bang", B: "was / don’t bang", C: "were / won’t bang", D: "were / wouldn’t bang" }, ans: "D" },
+      { id: 87, q: "I wouldn’t buy it unless I _____ it.", opts: { A: "can’t afford", B: "could have afforded", C: "could afford", D: "couldn’t afford" }, ans: "C" },
+      { id: 88, q: "A: Williams. Jack Williams.\nB: Sorry. I _____ the wrong number.", opts: { A: "must dial", B: "must have dialed", C: "might dial", D: "might have been dialed" }, ans: "B" },
+      { id: 89, q: "A: He was driving on the right in Cyprus when he crashed.\nB: He _____ on the left.", opts: { A: "had to be driving", B: "could be driving", C: "ought to have been driving", D: "shouldn’t have been driving" }, ans: "C" },
+      { id: 90, q: "A: The attendant was smoking near the petrol pump.\nB: He _____ smoking there.", opts: { A: "shouldn’t be", B: "ought not to be", C: "wouldn’t be", D: "shouldn’t have been" }, ans: "D" },
+      { id: 91, q: "You say you saw him sitting in the canteen today. He _____ sitting there. He has been in hospital for two days.", opts: { A: "couldn’t have been", B: "must not be", C: "can not be", D: "might have been" }, ans: "A" },
+      { id: 92, q: "A: Look at the magician. He is sawing that woman in half!\nB: He _____ sawing her in half. It _____ a trick.", opts: { A: "mustn’t be / might be", B: "can not be / must be", C: "ought not to be / can be", D: "must be / might be" }, ans: "B" },
+      { id: 93, q: "A: His brother won the marathon last year.\nB: He _____ very fast.", opts: { A: "might have been", B: "must be", C: "may have been", D: "might be" }, ans: "A" },
+      { id: 94, q: "A: How on earth did the thief get in?\nB: He _____ a window.", opts: { A: "is able to break", B: "might have been broken", C: "could have broken", D: "had to break" }, ans: "C" },
+      { id: 95, q: "I wish he _____ a little more tactful!", opts: { A: "must be", B: "would be", C: "will be", D: "might be" }, ans: "B" },
+      { id: 96, q: "The Government recommended that the housing problem _____ speeded up.", opts: { A: "would be", B: "must be", C: "is to be", D: "should be" }, ans: "D" },
+      { id: 97, q: "A: Surely he has woken up.\nB: Well, I can hear snoring coming from his room.\nA: He _____ then.", opts: { A: "can’t wake up", B: "might not wake up", C: "must have woken up", D: "can not have woken up" }, ans: "D" },
+      { id: 98, q: "You cannot wash these curtains. They _____.", opts: { A: "to be dry-cleaned", B: "must have been dry-cleaned", C: "have been dry-cleaned", D: "have to be dry-cleaned" }, ans: "D" },
+      { id: 99, q: "The reports _____ by four o’clock because the manager is going to sign them.", opts: { A: "must be finished", B: "must finish", C: "should have been finished", D: "had to be finished" }, ans: "A" },
+      { id: 100, q: "I _____ very hard but I do now.", opts: { A: "don’t need to work", B: "don’t have to work", C: "didn’t have to work", D: "should have worked" }, ans: "C" },
+      { id: 101, q: "George King ___ filter-tipped cigarettes, but now he smokes cigars.", opts: { A: "is used to smoking", B: "was used to smoke", C: "is accustomed to smoking", D: "was accustomed to smoking" }, ans: "D" },
+      { id: 102, q: "“It isn’t necessary for us to leave soon.” means: _____.", opts: { A: "We needn’t have left soon.", B: "We didn’t need to leave soon.", C: "We don’t need to leave soon", D: "We have to leave soon" }, ans: "C" },
+      { id: 103, q: "A: I went out last night, and my cold got worse.\nB: You _____ at home.", opts: { A: "must stay", B: "had better stay", C: "ought to stay", D: "should have stayed" }, ans: "D" },
+      { id: 104, q: "A: The Chinese described flying machines.\nB: They _____ tremendous imaginations.", opts: { A: "could have", B: "must have", C: "must have had", D: "need to have" }, ans: "C" },
+      { id: 105, q: "A: Do you think they’ll have my size?\nB: They _____ have your size.", opts: { A: "are used to", B: "should", C: "has to", D: "will have to" }, ans: "B" },
+      { id: 106, q: "If you worked in industry, you _____ the value of money.", opts: { A: "had to know", B: "would know", C: "should have known", D: "might have known" }, ans: "B" },
+      { id: 107, q: "His life _____ if he had worn his seat belt.", opts: { A: "would be saved", B: "might have saved", C: "could have been saved", D: "may be saved" }, ans: "C" },
+      { id: 108, q: "I _____ go out than be stuck in bed.", opts: { A: "had better", B: "should", C: "have to", D: "would rather" }, ans: "D" },
+      { id: 109, q: "I _____ to learn English fluently.", opts: { A: "must", B: "have got", C: "should", D: "would rather" }, ans: "B" },
+      { id: 110, q: "A: Is he going to have his operation this month?\nB: Well, he _____ have had it this month, but now he is going to have it next month.", opts: { A: "was to", B: "will", C: "used to", D: "needs to" }, ans: "A" },
+      { id: 111, q: "A: _____ Barcelona _____ Real Madrid last night?\nB: Yes, it could. It has got more skillful players.", opts: { A: "could / beat", B: "could / have been beaten", C: "could / have beaten", D: "could / be beaten by" }, ans: "C" },
+      { id: 112, q: "I can’t find my keys. I have a feeling I _____ them in the library.", opts: { A: "might leave", B: "must have left", C: "could leave", D: "should have left" }, ans: "B" },
+      { id: 113, q: "My car has been making a strange noise lately. I _____ it to the garage and get it seen to.", opts: { A: "had to take", B: "shall have to take", C: "should have taken", D: "was to have taken" }, ans: "B" },
+      { id: 114, q: "Joan suggested that they _____ all go for a walk in the afternoon - provided it didn’t keep on raining.", opts: { A: "would", B: "could", C: "should", D: "might" }, ans: "C" },
+      { id: 115, q: "You say I _____ a screwdriver. What _____ I _____?", opts: { A: "could have used / should / have used", B: "shouldn’t have used / should / have used", C: "might not use / should / be used", D: "mustn’t use / could / have used" }, ans: "B" },
+      { id: 116, q: "He was so unsure of himself that he ______ even buy a box of chocolates without consulting his mother.", opts: { A: "wouldn’t", B: "won’t", C: "can’t", D: "might not have" }, ans: "A" },
+      { id: 117, q: "Before his illness he _____ anything but now he _____ very careful with his diet.", opts: { A: "could eat / can be", B: "must have eaten / had to be", C: "could eat / has to be", D: "couldn’t eat / has to be" }, ans: "C" },
+      { id: 118, q: "Powerful though they were, they never _____ to challenge the authority of the King.", opts: { A: "will have", B: "dared", C: "would have", D: "could’ve been" }, ans: "B" },
+      { id: 119, q: "If those two people _____ leave, the Whole firm would probably collapse.", opts: { A: "must", B: "are to", C: "were to", D: "had to" }, ans: "C" },
+      { id: 120, q: "We _____ be late for work. Our boss is very particular about time-keeping.", opts: { A: "wouldn’t", B: "weren’t to", C: "daren’t", D: "didn’t used to" }, ans: "C" }
+    ];
+
+    const userAnswers = {};
+
+    function renderQuiz() {
+      const container = document.getElementById("quiz");
+      let html = "";
+
+      quizData.forEach((item) => {
+        html += `
+          <div class="question-card" id="q-card-${item.id}">
+            <div class="question-title">${item.id}. ${item.q.replace(/\n/g, "<br>")}</div>
+            <div class="options">
+        `;
+
+        Object.keys(item.opts).forEach((key) => {
+          html += `
+            <button class="option-btn" id="btn-${item.id}-${key}" onclick="selectOption(${item.id}, '${key}')">
+              <strong>${key})</strong> ${item.opts[key]}
+            </button>
+          `;
+        });
+
+        html += `
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function selectOption(qId, key) {
+      userAnswers[qId] = key;
+      const opts = ["A", "B", "C", "D"];
+      opts.forEach((k) => {
+        const btn = document.getElementById(`btn-${qId}-${k}`);
+        if (btn) {
+          btn.classList.remove("selected");
+        }
+      });
+      const selectedBtn = document.getElementById(`btn-${qId}-${key}`);
+      if (selectedBtn) {
+        selectedBtn.classList.add("selected");
+      }
+    }
+
+    function checkAnswers() {
+      let score = 0;
+
+      quizData.forEach((item) => {
+        const selected = userAnswers[item.id];
+        const correct = item.ans;
+
+        Object.keys(item.opts).forEach((key) => {
+          const btn = document.getElementById(`btn-${item.id}-${key}`);
+          if (btn) {
+            btn.disabled = true;
+            if (key === correct) {
+              btn.classList.add("correct");
+            }
+            if (selected === key && selected !== correct) {
+              btn.classList.add("incorrect");
+            }
+          }
+        });
+
+        if (selected === correct) {
+          score++;
+        }
+      });
+
+      const resultPanel = document.getElementById("result-panel");
+      resultPanel.style.display = "block";
+      resultPanel.innerText = `Ваш результат: ${score} з ${quizData.length} правильних відповідей.`;
+      resultPanel.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    renderQuiz();
+  </script>
+
+</body>
+</html>
